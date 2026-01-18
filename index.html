@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<!-- saved from url=(0051)file:///C:/Users/Lenovo/OneDrive/Desktop/index.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="file:///C:/Users/Lenovo/OneDrive/Desktop/style.css">
+    <title>Calculator App</title>
+    <style>
+    *{
+        margin:0;
+        padding:0;
+        box-sizing:border-box;
+        font-family:consolas;
+       } 
+      body{
+        display:flex;
+        flex-direction: column;
+        justify-content:flex-start;
+        align-items:center;
+        min-height:100vh;
+        background:#edf1f4;
+        padding-top: 60px;
+       }
+      .dark{
+          background: #083650;
+      }
+
+      /* Navigation Bar Styles */
+      .navbar {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          background: #061d2b;
+          padding: 10px;
+          box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+          display: flex;
+          justify-content: center;
+          z-index: 1000;
+      }
+      .dark .navbar {
+          background: #061d2b;
+          box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      }
+      .nav-links {
+          display: flex;
+          gap: 30px;
+      }
+      .nav-links a {
+          color: white;
+          text-decoration: none;
+          font-size: 30px;
+          font-weight: bold;
+          padding: 8px 16px;
+          border-radius: 6px;
+          transition: all 0.3s ease;
+      }
+      .nav-links a:hover {
+          background: rgba(255,255,255,0.2);
+      }
+      .nav-links a.active {
+          background: rgba(255,255,255,0.3);
+      }
+
+      /* Page Content Styles */
+      .page-content {
+          display: none;
+          max-width: 800px;
+          padding: 30px;
+          text-align: center;
+      }
+      .page-content.active {
+          display: block;
+      }
+      .page-content h1 {
+          color: #5462b1;
+          margin-bottom: 20px;
+          font-size: 2.5em;
+      }
+      .dark .page-content h1 {
+          color: #fff;
+      }
+      .page-content p {
+          color: #333;
+          font-size: 1.2em;
+          line-height: 1.6;
+      }
+      .dark .page-content p {
+          color: #ccc;
+      }
+
+      /* Calculator Styles */
+      .calculator{
+        position:relative;
+        width:340px;
+        padding:20px;
+        border-radius:20px;
+
+        margin-top: 20px;
+       }
+      .dark .calculator{
+          background: #083650;
+      }
+      .calculator .buttons{
+        position:relative;
+        display:grid;
+        }
+      .calculator .buttons #value{
+          position: relative;
+          grid-column: span 4;
+          user-select: none;
+          overflow: none;
+          height: 100px;
+          width: 100%;
+          text-align: end;
+          color: #5166d6;
+          line-height: 100px;
+          box-shadow: inset 5px 5px 10px rgb(255, 255, 255),
+          inset -5px -5px 20px#fff;
+          border-radius: 10px;
+          margin-bottom: 12px;
+          padding: 0px 20px;
+          font-size: 2em;
+          font-weight: 500;
+      }
+      .dark .calculator .buttons #value{
+          color: #083650;
+          box-shadow: inset 15px 15px 20px rgb(08, 36, 50),
+          inset -15px -15px 20px #083650;
+      }
+      .calculator .buttons span{
+        position:relative;
+        padding:10px;
+        box-shadow: 5px 5px 10px rgb(255, 255, 255), 
+         -5px -5px 20px #fff;
+        margin:10px;
+        cursor:pointer;
+        user-select:none;
+        min-width:40px;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        font-size:30px;
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif ;
+        color:#061d2b;
+        border-radius:10px;
+       } 
+      .dark .calculator .buttons span{
+          color: #ffffff;
+          box-shadow: 5px 5px 10px rgba(0,0,0,0.25),
+          -5px -5px 10px #083650;
+      }
+      .calculator .buttons span:active{
+        box-shadow: inset 5px 5px 10px rgba(0,0,0,0.1), 
+       inset -5px -5px 20px #ffffff;
+        color:#f44336;
+       } 
+      .dark .calculator .buttons span:active{
+          box-shadow: inset 5px 5px 10px rgba(0,0,0,0.1),
+          inset -5px -5px 10px #fff;
+      }
+      .calculator .buttons span#clear{
+        grid-column:span 2;
+        background:#8e0900;
+        color:#fff;
+       } 
+      .calculator .buttons span#plus{
+        grid-row:span 2;
+        background:#31a935;
+        color:#fff;
+       } 
+      .calculator .buttons span#equal{
+        grid-row:span 2;
+        background:#2196f3;
+        color:#ffffff;
+       } 
+      .calculator .buttons span#clear:active, 
+      .calculator .buttons span#plus:active, 
+      .calculator .buttons span#equal:active{
+        box-shadow:5px 5px 10px rgba(0,0,0,0.1),
+          -5px -5px 10px #fff, 
+          inset 5px 5px 10px rgba(0,0,0,0.1);
+      } 
+      .dark .calculator .buttons span#clear:active,
+      .dark .calculator .buttons span#plus:active,
+      .dark .calculator .buttons span#equal:active{
+          box-shadow: inset 5px 5px 10px rgba(0,0,0,0.1)
+      }
+      .toggleBtn{
+          position: fixed;
+          top: 80px;
+          right: 20px;
+          height: 20px;
+          width: 20px;
+          border-radius: 50%;
+          background: #555;
+          cursor: pointer;
+          box-shadow: 5px 5px 10px rgba(0,0,0,0.1),
+          -5px -5px 10px #fff;
+          z-index: 1001;
+      }
+      .dark .toggleBtn{
+          background: #edf1f4;
+          box-shadow: 5px 5px 10px rgba(0,0,0,0.25),
+          -5px -5px 10px rgba(255,255,255,0.25);
+      }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-links">
+            <a href="file:///C:/Users/Lenovo/OneDrive/Desktop/index.html#" class="active" data-page="home">HOME</a>
+            <a href="file:///C:/Users/Lenovo/OneDrive/Desktop/index.html#" data-page="about">ABOUT</a>
+            <a href="file:///C:/Users/Lenovo/OneDrive/Desktop/index.html#" data-page="contact">CONTACT</a>
+            <a href="file:///C:/Users/Lenovo/OneDrive/Desktop/index.html#" data-page="calculator">CALCULATOR</a>
+        </div>
+    </nav>
+
+    <!-- Dark Mode Toggle Button -->
+    <div class="toggleBtn"></div>
+
+    <!-- Home Page -->
+    <div id="home" class="page-content active">
+
+        <marquee>
+        <h3>WELCOME TO CALCULATOR</h3>
+        </marquee>
+        <div class="calculator" style="margin: 40px auto;">
+          <div class="buttons">
+            <h2 id="value"></h2>
+            <span id="clear">CLEAR</span>
+            <span>/</span>
+            <span>*</span>
+            <span>7</span>
+            <span>8</span>
+            <span>9</span>
+            <span>-</span>
+            <span>4</span>
+            <span>5</span>
+            <span>6</span>
+            <span id="plus">+</span>
+            <span>1</span>
+            <span>2</span>
+            <span>3</span>
+            <span>0</span>
+            <span>00</span>
+            <span>.</span>
+            <span id="equal">=</span>
+          </div>
+        </div>
+    </div>
+
+    <style>
+    h3{
+    font-size: 40px;
+    background-color: #061d2b;
+    width: 500px;
+    padding: 10px;
+    color: #ffffff;
+    border-radius: 20px;
+    }
+
+
+
+    </style>
+
+
+    <!-- About Page -->
+    <div id="about" class="page-content">
+        <h1>About This App</h1>
+        <p>This calculator application was created to demonstrate:</p>
+        <ul style="list-style: none; margin: 20px 0; text-align: left; display: inline-block;">
+            <li>✓ HTML5, CSS3, and JavaScript integration</li>
+            <li>✓ Responsive design</li>
+            <li>✓ Dark/Light mode toggle</li>
+            <li>✓ Multi-page navigation</li>
+            <li>✓ Mathematical operations</li>
+        </ul>
+        <p>All calculations are performed using JavaScript's eval() function for demonstration purposes.</p>
+    </div>
+
+    <!-- Contact Page -->
+    <div id="contact" class="page-content">
+        <h1>Contact Us</h1>
+        <p>If you have any questions or feedback, feel free to reach out!</p>
+        <div style="margin: 30px auto; max-width: 500px; text-align: left; background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px;">
+            <p><strong>Email:</strong> contact@calculatorapp.com</p>
+            <p><strong>Phone:</strong> +1 (234) 567-890</p>
+            <p><strong>Address:</strong> 123 Tech Street, Digital City</p>
+        </div>
+    </div>
+
+    <!-- Calculator Page (Full Size) -->
+    <div id="calculator" class="page-content">
+        <h1>Calculator</h1>
+        <p>Use the calculator below for your calculations:</p>
+        <div class="calculator" style="margin: 40px auto;">
+          <div class="buttons">
+            <h2 id="value2"></h2>
+            <span class="calc-btn" id="clear2">CLEAR</span>
+            <span class="calc-btn">/</span>
+            <span class="calc-btn">*</span>
+            <span class="calc-btn">7</span>
+            <span class="calc-btn">8</span>
+            <span class="calc-btn">9</span>
+            <span class="calc-btn">-</span>
+            <span class="calc-btn">4</span>
+            <span class="calc-btn">5</span>
+            <span class="calc-btn">6</span>
+            <span class="calc-btn" id="plus2">+</span>
+            <span class="calc-btn">1</span>
+            <span class="calc-btn">2</span>
+            <span class="calc-btn">3</span>
+            <span class="calc-btn">0</span>
+            <span class="calc-btn">00</span>
+            <span class="calc-btn">.</span>
+            <span class="calc-btn" id="equal2">=</span>
+          </div>
+        </div>
+    </div>
+
+<script>
+    // Navigation functionality
+    const navLinks = document.querySelectorAll('.nav-links a');
+    const pageContents = document.querySelectorAll('.page-content');
+    
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Remove active class from all links and pages
+            navLinks.forEach(l => l.classList.remove('active'));
+            pageContents.forEach(page => page.classList.remove('active'));
+            
+            // Add active class to clicked link
+            this.classList.add('active');
+            
+            // Show corresponding page
+            const pageId = this.getAttribute('data-page');
+            document.getElementById(pageId).classList.add('active');
+        });
+    });
+    
+    // Calculator functionality for Home page
+    let buttons = document.querySelector('.buttons');
+    let btn = document.querySelectorAll('.buttons span');
+    let value = document.getElementById('value');
+    
+    for(let i=0; i<btn.length; i++){
+        btn[i].addEventListener("click", function(){
+            if(this.innerHTML=="="){
+                value.innerHTML = eval(value.innerHTML);
+            } else {
+                if(this.innerHTML=="CLEAR"){
+                    value.innerHTML = "";
+                }
+                else{
+                    value.innerHTML += this.innerHTML;
+                }
+            }
+        })
+    }
+    
+    // Calculator functionality for Calculator page
+    let btn2 = document.querySelectorAll('.calc-btn');
+    let value2 = document.getElementById('value2');
+    
+    for(let i=0; i<btn2.length; i++){
+        btn2[i].addEventListener("click", function(){
+            if(this.innerHTML=="="){
+                value2.innerHTML = eval(value2.innerHTML);
+            } else {
+                if(this.innerHTML=="CLEAR"){
+                    value2.innerHTML = "";
+                }
+                else{
+                    value2.innerHTML += this.innerHTML;
+                }
+            }
+        })
+    }
+    
+    // Dark mode toggle
+    let toggleBtn = document.querySelector(".toggleBtn");
+    let body = document.querySelector('body');
+    
+    toggleBtn.onclick = function(){
+        body.classList.toggle('dark')
+    }
+</script>
+
+</body></html>
